@@ -24,7 +24,7 @@ cluster 	:= forwarder proxy
 all : $(targets)
 
 #codec
-$(addprefix $(BIN)/, $(codec)) : $(codecdir)/%.c $(codecdir)/worker.h
+$(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(codecdir)/worker.h
 	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $<.c -o $@
 
 #gpu
@@ -32,7 +32,7 @@ $(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
 	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $(LIBGL) $(filter %.c, %^) -o $@
 
 #cluster
-$(addprefix $(BIN)/, $(cluster)) : $(clusterdir)/%.c
+$(addprefix $(BIN)/, $(cluster)) : $(BIN)/% : $(clusterdir)/%.c
 	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $<.c -o $@
 
 clean:

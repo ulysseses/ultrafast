@@ -1,4 +1,4 @@
-#include "worker.h"
+#include "cluster/worker.h"
 #include "gpu/BTexture.h"
 #include "sizes.h"
 #include <math.h>
