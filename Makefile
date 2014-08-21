@@ -29,7 +29,7 @@ $(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(codecdir)/worker.h
 
 #gpu
 $(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
-	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $(LIBGL) $(filter %.c, %^) -o $@
+	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $(LIBGL) $(filter-out %.h, %^) -o $@
 
 #cluster
 $(addprefix $(BIN)/, $(cluster)) : $(BIN)/% : $(clusterdir)/%.c
