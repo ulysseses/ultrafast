@@ -2,9 +2,9 @@
 #define BTEXTURE_H
 
 
-#include "cluster/US_ZMQ.h"
-#include "interpolation/OpenGL.h"
-#include "interpolation/VertexData2D.h"
+#include "US_ZMQ.h"
+#include "gpu/OpenGL.h"
+#include "gpu/VertexData2D.h"
 
 class BTexture {
 private:

@@ -1,7 +1,7 @@
 #ifndef VERTEXDATA2D_H
 #define VERTEXDATA2D_H
 
-#include "interpolation/OpenGL.h"
+#include "gpu/OpenGL.h"
 
 
 struct VertexPos2D {

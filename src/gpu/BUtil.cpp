@@ -1,6 +1,6 @@
-#include "interpolation/OpenGL.h"
-#include "interpolation/BUtil.h"
-#include "interpolation/BTexture.h"
+#include "gpu/OpenGL.h"
+#include "gpu/BUtil.h"
+#include "gpu/BTexture.h"
 #include "sizes.h"
 
 

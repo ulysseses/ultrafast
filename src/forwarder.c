@@ -1,7 +1,7 @@
 /*
 	Just like proxy.c, but without distinguishing backends
 */
-#include "cluster/US_ZMQ.h"
+#include "US_ZMQ.h"
 
 
 static char *self;

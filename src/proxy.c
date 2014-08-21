@@ -1,4 +1,4 @@
-#include "cluster/US_ZMQ.h"
+#include "US_ZMQ.h"
 
 
 int main (int argc, char * argv[]) {

@@ -1,5 +1,5 @@
-#include "cluster/worker.h"
-#include "interpolation/BTexture.h"
+#include "worker.h"
+#include "gpu/BTexture.h"
 #include "sizes.h"
 #include <math.h>
 #include <string>

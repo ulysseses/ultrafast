@@ -1,4 +1,4 @@
-#include "interpolation/BUtil.h"
+#include "gpu/BUtil.h"
 
 void runMainLoop( int val );
 

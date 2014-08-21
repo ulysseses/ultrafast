@@ -5,7 +5,7 @@ SRCDIR		:= src
 BUILDDIR	:= build
 TARGETDIR	:= bin
 
-CFLAGS		:= -G # -Wall
+#CFLAGS		:= -G -Wall
 INC			:= -Iinclude
 LIBZMQ		:= -lczmq -lzmq
 LIBGL		:= -lGL -lglut
