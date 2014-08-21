@@ -31,8 +31,7 @@ $(BUILDDIR) :
 	mkdir $(BUILDDIR)
 
 clean:
-	rm $(BUILDDIR)/*
-	# rmdir $(BUILDDIR)
+	rm -rf build
 
 
 
