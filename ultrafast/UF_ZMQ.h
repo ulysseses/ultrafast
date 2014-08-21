@@ -1,5 +1,5 @@
-#ifndef US_ZMQ_H
-#define US_ZMQ_H
+#ifndef UF_ZMQ_H
+#define UF_ZMQ_H
 
 #include <czmq.h>
 	/*  ZMQ High-level C API */

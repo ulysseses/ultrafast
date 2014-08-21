@@ -25,7 +25,7 @@ all : $(targets)
 
 #codec
 $(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(codecdir)/worker.h
-	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $< -o $@
+	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $< -o $@
 
 #gpu
 $(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
@@ -33,7 +33,7 @@ $(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
 
 #cluster
 $(addprefix $(BIN)/, $(cluster)) : $(BIN)/% : $(clusterdir)/%.c
-	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $< -o $@
+	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $< -o $@
 
 clean:
 	rm -rf $(BUILD)
