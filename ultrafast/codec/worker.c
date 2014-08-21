@@ -1,5 +1,5 @@
 /* Request Dealer Sandwich Worker */
-#include "worker.h"
+#include "codec/worker.h"
 #include <jpeglib.h>
 
 const J_COLOR_SPACE PIX_FMT = JCS_GRAYSCALE;

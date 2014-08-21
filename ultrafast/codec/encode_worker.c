@@ -1,4 +1,4 @@
-#include "worker.h"
+#include "codec/worker.h"
 #include "sizes.h"
 
 extern const J_COLOR_SPACE PIX_FMT;

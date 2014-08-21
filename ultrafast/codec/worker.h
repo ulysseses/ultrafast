@@ -1,7 +1,7 @@
 #ifndef WORKER_H
 #define WORKER_H
 
-#include "US_ZMQ.h"
+#include "UF_ZMQ.h"
 
 typedef byte* (* decorableFnType)(byte*);
 
