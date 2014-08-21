@@ -1,37 +1,43 @@
 
 CC			:= gcc
 CXX			:= g++
-SRCDIR		:= src
-BUILDDIR	:= build
-TARGETDIR	:= bin
-
 #CFLAGS		:= -G -Wall
-INC			:= -Iinclude
+#CXXFLAGS	:= $(CFLAGS)
+
+BIN			:= bin
+BUILD		:= build
+SRC			:= ultrafast
+INC			:= -I$(SRC)
 LIBZMQ		:= -lczmq -lzmq
 LIBGL		:= -lGL -lglut
 
-codec		:= $(patsubst %, $(TARGETDIR)/%, decode_worker encode_worker)
-devices		:= $(patsubst %, $(TARGETDIR)/%, fowarder proxy)
+targets		:= $(addprefix $(BIN)/, proxy forwarder decode_worker encode_worker gpu_worker)
+codecdir	:= $(SRC)/codec
+gpudir		:= $(SRC)/gpu
+clusterdir	:= $(SRC)/cluster
+codec 		:= decode_worker encode_worker
+cluster 	:= forwarder proxy
 
 
 .PHONY : all clean
 
-all : $(codec) $(TARGETDIR)/gpu_worker $(devices)
+all : $(targets)
 
-$(codec) : $(TARGETDIR)/% : $(SRCDIR)/%.c $(SRCDIR)/worker.c | $(BUILDDIR)
-	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $^ -o $@
+#codec
+$(addprefix $(BIN)/, $(codec)) : $(codecdir)/%.c $(codecdir)/worker.h
+	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $<.c -o $@
 
-$(TARGETDIR)/gpu_worker : $(wildcard $(SRCDIR)/gpu/*) | $(BUILDDIR)
-	$(CXX) $(CFLAGS) $(INC) $(LIBZMQ) $(LIBGL) $^ -o $@
+#gpu
+$(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
+	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $(LIBGL) $(filter %.c, %^) -o $@
 
-$(devices) : $(TARGETDIR)/% : $(SRCDIR)/%.c | $(BUILDDIR)
-	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $< -o $@
-
-$(BUILDDIR) :
-	mkdir $(BUILDDIR)
+#cluster
+$(addprefix $(BIN)/, $(cluster)) : $(clusterdir)/%.c
+	$(CC) $(CFLAGS) $(INC) $(LIBZMQ) $<.c -o $@
 
 clean:
-	rm -rf build
+	rm -rf $(BUILD)
+	mkdir $(BUILD)
 
 
 

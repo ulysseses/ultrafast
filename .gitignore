@@ -1,3 +1,6 @@
+build/
+bin/
+
 # Mac
 .DS_Store
 
