@@ -29,8 +29,10 @@ int main (int argc, char * argv[]) {
 		if (pollset[0].revents & ZMQ_POLLIN) {
 			msg = zmsg_recv(frontend);
 			if (!msg) break;
-			zmsg_prepend(msg, &zframe_new_empty());
-			zmsg_prepend(msg, (zframe_t **) &zlist_pop(workers));
+			zframe_t *frame = zframe_new_empty();
+			zmsg_prepend(msg, &frame);
+			frame = (zframe_t*) zlist_pop(workers);
+			zmsg_prepend(msg, (zframe_t **) &frame);
 			zmsg_send(&msg, backend);
 			capacity--;
 		}

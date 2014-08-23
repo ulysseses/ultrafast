@@ -2,14 +2,15 @@
 CC			:= gcc
 CXX			:= g++
 #CFLAGS		:= -G -Wall
-#CXXFLAGS	:= $(CFLAGS)
+CXXFLAGS	:= $(CFLAGS) -std=c++11
 
 BIN			:= bin
 BUILD		:= build
 SRC			:= ultrafast
-INC			:= -I$(SRC)
-LIBZMQ		:= -lczmq -lzmq
+INC			:= -I$(SRC) -Ilib
+LIBZMQ		:= -lzmq -lczmq
 LIBGL		:= -lGL -lglut
+LIBJPEG     := -Llib -ljpeg
 
 targets		:= $(addprefix $(BIN)/, proxy forwarder decode_worker encode_worker gpu_worker)
 codecdir	:= $(SRC)/codec
@@ -24,18 +25,20 @@ cluster 	:= forwarder proxy
 all : $(targets)
 
 #codec
-$(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(codecdir)/worker.h
-	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $< -o $@
+$(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(wildcard $(codecdir)/worker.*)
+	$(CC) $(CFLAGS) $(INC) $(filter-out %.h, $^) $(LIBZMQ) $(LIBJPEG) -o $@
 
 #gpu
 $(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
-	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $(LIBGL) $(filter-out %.h, $^) -o $@
+	$(CXX) $(CXXFLAGS) $(INC) $(filter-out %.h, $^) $(LIBZMQ) $(LIBGL) -o $@
 
 #cluster
 $(addprefix $(BIN)/, $(cluster)) : $(BIN)/% : $(clusterdir)/%.c
-	$(CXX) $(CXXFLAGS) $(INC) $(LIBZMQ) $< -o $@
+	$(CC) $(CFLAGS) $(INC) $< $(LIBZMQ) -o $@
 
 clean:
 	rm -rf $(BUILD)
 	mkdir $(BUILD)
+	rm -rf $(BIN)
+	mkdir $(BIN)
 

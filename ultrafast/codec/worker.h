@@ -3,10 +3,10 @@
 
 #include "UF_ZMQ.h"
 
-typedef byte* (* decorableFnType)(byte*);
+typedef byte* (* decorableFnType)(byte*, size_t*);
 
-extern byte* decoder (byte *unprocessed_data, size_t size);
-extern byte* encoder (byte *unprocessed_data, size_t size);
+extern byte* decoder (byte *unprocessed_data, size_t *size);
+extern byte* encoder (byte *unprocessed_data, size_t *size);
 
 
 void zworker_boiler(decorableFnType worker_fn,

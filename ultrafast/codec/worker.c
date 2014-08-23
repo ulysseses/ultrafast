@@ -1,8 +1,5 @@
 /* Request Dealer Sandwich Worker */
 #include "codec/worker.h"
-#include <jpeglib.h>
-
-const J_COLOR_SPACE PIX_FMT = JCS_GRAYSCALE;
 
 /*
 inline byte* decoder(byte *unprocessed_data, size_t size) {
@@ -34,16 +31,16 @@ void zworker_boiler(decorableFnType worker_fn,
 	
 	/* Main worker loop */
 	zframe_t *frame = zframe_new(WORKER_READY, 1);
-	zframe_send(&frame, frontend);
+	zframe_send(&frame, frontend, 0);
 	while (true) {
 		zmsg_t *msg = zmsg_recv(frontend);
 		if (!msg) break;
 		frame = zmsg_last(msg);
-		size_t size = zframe_size(frame)
+		size_t size = zframe_size(frame);
 		byte *data = zframe_data(frame);
-		byte *processed_data = worker_fn(data, size);
+		byte *processed_data = worker_fn(data, &size);  // modify size?
 		zframe_reset(frame, processed_data, size);
-		zmsg_send(msg, backend);
+		zmsg_send(&msg, backend);
 	}  /* while (true) */
 	
 	zctx_destroy(&ctx);
