@@ -10,9 +10,9 @@ static struct jpeg_error_mgr			jerr;
 static struct jpeg_source_mgr			smgr;
 
 byte* decoder (byte *unprocessed_data, size_t *size) {
-	jpeg_read_header(&dinfo, 1);
-	smgr.next_input_byte = (JOCTET*)unprocessed_data;
+	smgr.next_input_byte = (JOCTET*)unprocessed_data;  // input buffer (unsigned char or JOCTET)
 	JSAMPROW row_pointer;  // also unsigned char *
+	jpeg_read_header(&dinfo, 1);
 	const size_t pitch = SCREEN_WIDTH * NUM_CHANNEL;
 	jpeg_start_decompress(&dinfo);
 	while (dinfo.output_scanline < dinfo.output_height) {
@@ -49,7 +49,6 @@ int main (int argc, char * argv[]) {
 	smgr.init_source 		= init_buffer;  // buffer setup callback
 	smgr.fill_input_buffer	= fill_buffer;  // what to do when buffer is empty
 	smgr.term_source		= term_buffer;  // finalize buffer & clean-up callback
-	//smgr.next_input_byte	  = in_buffer;  // input buffer (unsigned char or JOCTET)
 	smgr.bytes_in_buffer = SCREEN_HEIGHT * SCREEN_WIDTH * NUM_CHANNEL;
 	dinfo.src				= &smgr;
 	dinfo.image_width		= SCREEN_WIDTH;

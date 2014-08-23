@@ -5,6 +5,7 @@
 #include "UF_ZMQ.h"
 #include "gpu/OpenGL.h"
 #include "gpu/VertexData2D.h"
+#include <string>
 
 class BTexture {
 private:
@@ -35,10 +36,11 @@ private:
 	
 public:
 	BTexture( GLuint iwidth, GLuint iheight,
-		GLuint swidth, GLuint sheight, char *path );
+		GLuint swidth, GLuint sheight, std::string path );
 	~BTexture();
 	void freeTexture();
-	void render( GLfloat x, GLfloat y);
+	//void render( GLfloat x, GLfloat y);
+	void render();
 	void queuePop();
 	void queuePush();
 };

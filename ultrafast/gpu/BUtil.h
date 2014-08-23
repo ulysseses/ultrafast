@@ -1,6 +1,8 @@
 #ifndef BUTIL_H
 #define BUTIL_H
 
+#include "gpu/OpenGL.h"
+
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 
@@ -11,5 +13,6 @@ bool initGL();
 void update();
 void render();
 void idleCB();
+void exitCB();
 
 #endif

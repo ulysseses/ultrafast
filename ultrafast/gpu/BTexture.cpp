@@ -1,14 +1,10 @@
-#include "cluster/worker.h"
 #include "gpu/BTexture.h"
 #include "sizes.h"
 #include <math.h>
-#include <string>
-
+#include <stdlib.h>
+//#include <string>
 
 #define PI 3.14159265359
-
-extern const int SCREEN_HEIGHT;
-extern const int SCREEN_WIDTH;
 
 static const float SECTOR_RAD	= 1.3184;
 static const float NUM_BEAMS	= 128;  // Note: FLOAT not INT
@@ -29,30 +25,32 @@ static const int NUM_ELEMENTS	= (NUM_BEAMS - 1) * 6;
 
 
 BTexture::BTexture( GLuint iwidth, GLuint iheight,
-	GLuint swidth, GLuint sheight, char *path ) {
+	GLuint swidth, GLuint sheight, std::string path ) {
 	/* ZMQ */
 	ctx = zctx_new();
-	_frontend	= zsocket_new(ctx, ZMQ_REQ);
-	_backend	= zsocket_new(ctx, ZMQ_DEALER);
-	zsocket_connect(_frontend, "ipc://%s-fe.ipc", path);
-	zsocket_connect(_backend, "ipc://%s-be.ipc", path);
+	frontend	= zsocket_new(ctx, ZMQ_REQ);
+	backend		= zsocket_new(ctx, ZMQ_DEALER);
+	zsocket_connect(frontend, "ipc://%s-fe.ipc", path.c_str());
+	zsocket_connect(backend, "ipc://%s-be.ipc", path.c_str());
 	
 	zframe_t *frame = zframe_new(WORKER_READY, 1);
-	zframe_send(&frame, _frontend);
+	zframe_send(&frame, frontend, 0);
 	
 	/* OpenGL */
-	textureID		= 0;
-	ptr				= NULL;
 	imageWidth		= iwidth;
 	imageHeight		= iheight;
 	imageSize		= iwidth * iheight;
-	textureWidth	= powerOfTwo(width);
-	textureHeight	= powerOfTwo(height);
+	textureWidth	= powerOfTwo(iwidth);
+	textureHeight	= powerOfTwo(iheight);
 	textureSize		= textureWidth * textureHeight;
 	screenWidth		= swidth;
 	screenHeight	= sheight;
 	screenSize		= swidth * sheight;
 	
+	tData			= NULL;
+	vData			= NULL;
+	iData			= NULL;
+	pixels			= NULL;
 	tboID			= 0;
 	texID			= 0;
 	vtcboID			= 0;
@@ -62,16 +60,18 @@ BTexture::BTexture( GLuint iwidth, GLuint iheight,
 
 	// vData
 	vData = new VertexData2D[NUM_VERTICES];
-	for (float angle=ANGLE0, int i=0; i<NUM_BEAMS/2;
+	float angle;
+	int i;
+	for (angle=ANGLE0, i=0; i<NUM_BEAMS/2;
 		angle+=SECTOR_RAD/NUM_BEAMS, ++i) {
 		vData[i].position.x = X0_N + PROBE_R_N*cos(angle);
 		vData[i].position.y = X0_N + PROBE_R_N*sin(angle);
 		vData[i].texCoord.s = i / NUM_BEAMS;
 		vData[i].texCoord.t = 0.f;
-		vData[i+NUM_BEAMS/2].position.x = X0_N + SCAN_D_N*cos(angle);
-		vData[i+NUM_BEAMS/2].texCoord.s = i / NUM_BEAMS;
-		vData[i+NUM_BEAMS/2].position.y = Y0_N + SCAN_D_N*sin(angle);
-		vData[i+NUM_BEAMS/2].texCoord.t = 1.f;
+		vData[i+((int)NUM_BEAMS/2)].position.x = X0_N + SCAN_D_N*cos(angle);
+		vData[i+((int)NUM_BEAMS/2)].texCoord.s = i / NUM_BEAMS;
+		vData[i+((int)NUM_BEAMS/2)].position.y = Y0_N + SCAN_D_N*sin(angle);
+		vData[i+((int)NUM_BEAMS/2)].texCoord.t = 1.f;
 	}
 	// iData
 	iData = new GLushort[NUM_ELEMENTS];
@@ -109,11 +109,11 @@ BTexture::BTexture( GLuint iwidth, GLuint iheight,
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(2, GL_FLOAT, sizeof(VertexData2D),
-		(GLvoid*)offsetof(VertexData2D, position), NULL);
+		(GLvoid*)offsetof(VertexData2D, position));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(VertexData2D),
-		(GLvoid*)offsetof(VertexData2D, texCoord), NULL);
-	glDisableClient(GL_VERTEX_ARRAY);
-	glDisableClient(GL_TEXTURE_COORD_ARRAY);
+		(GLvoid*)offsetof(VertexData2D, texCoord));
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	// Pixel Pack Buffer Object
 	glGenBuffers(2, pboIDs);
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboIDs[0]);
@@ -168,11 +168,12 @@ void BTexture::freeTexture() {
 	
 }
 
-void BTexture::render( GLfloat x, GLfloat y ) {
+//void BTexture::render( GLfloat x, GLfloat y ) {
+void BTexture::render() {
 	if (texID) {
 		// remove previous ModelView transform
 		glLoadIdentity();
-		glTranslatef(x, y, 0.f);
+		//glTranslatef(x, y, 0.f);
 		
 		queuePop();
 		glDrawElements(GL_TRIANGLES, NUM_ELEMENTS, GL_UNSIGNED_BYTE, NULL);
@@ -183,10 +184,12 @@ void BTexture::render( GLfloat x, GLfloat y ) {
 
 void BTexture::queuePop() {
 	msg = zmsg_recv(frontend);
-	if (!msg) break;
+	if (!msg) {
+		exit(EXIT_FAILURE);
+	}
 	frame = zmsg_last(msg);
 	GLubyte *p_tData = (GLubyte*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_WRITE);
-	assert (memcpy((void*);p_tData, (void*)zframe_data(frame),
+	assert (memcpy((void*)p_tData, (void*)zframe_data(frame),
 		textureSize * sizeof(GLubyte)) != NULL);
 	assert (glUnmapBuffer(GL_TEXTURE_BUFFER) == GL_TRUE);
 }
@@ -200,33 +203,25 @@ void BTexture::queuePush() {
 		GL_UNSIGNED_BYTE, NULL);
 	// nextIndex's pbo pins to system memory for ZMQ msg sending
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboIDs[nextIndex]);
-	GLubyte *p_pixels = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
+	GLubyte *p_pixels=(GLubyte*)glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
 	zframe_reset(frame, p_pixels, textureSize * sizeof(GLubyte));
 	zmsg_send(&msg, backend);
 	assert (glUnmapBuffer(GL_PIXEL_PACK_BUFFER) == GL_TRUE);
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+GLuint BTexture::powerOfTwo( GLuint num ) {
+	if (num != 0) {
+		num--;
+		num |= (num >> 1);  // OR first 2 bits
+		num |= (num >> 2);  // OR next 2 bits
+		num |= (num >> 4);  // OR next 4 bits
+		num |= (num >> 8);  // OR next 8 bits
+		num |= (num >> 16); // OR next 16 bits
+		num++;
+	}
+	return num;
+}
 
 
 

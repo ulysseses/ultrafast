@@ -9,7 +9,7 @@ BUILD		:= build
 SRC			:= ultrafast
 INC			:= -I$(SRC) -Ilib
 LIBZMQ		:= -lzmq -lczmq
-LIBGL		:= -lGL -lglut
+LIBGL		:= -lGL -lGLU -lglut
 LIBJPEG     := -Llib -ljpeg
 
 targets		:= $(addprefix $(BIN)/, proxy forwarder decode_worker encode_worker gpu_worker)

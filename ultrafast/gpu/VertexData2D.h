@@ -20,23 +20,6 @@ struct VertexData2D {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
 
 
