@@ -19,26 +19,25 @@ void clearSharedMem() {
 	delete texObj;
 }
 
-//debug
-#include <iostream>
-
-int initGLUT( int argc, char **argv ) {
-	// GLUT stuff for windowing
-	// initialized before any other GLUT routines
-	glutInit( &argc, argv );
-	std::cout << "hi" << std::endl;
-	glutInitDisplayMode( GLUT_LUMINANCE );  // display mode
-	glutInitWindowSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-	glutInitWindowPosition( 100, 100 );
-	int handle = glutCreateWindow(argv[0]);  // param is window title
+// //debug
+// #include <iostream>
+// int initGLUT( int argc, char **argv ) {
+// 	// GLUT stuff for windowing
+// 	// initialized before any other GLUT routines
+// 	glutInit( &argc, argv );
+// 	std::cout << "hi" << std::endl;
+// 	glutInitDisplayMode( GLUT_LUMINANCE );  // display mode
+// 	glutInitWindowSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+// 	glutInitWindowPosition( 100, 100 );
+// 	int handle = glutCreateWindow(argv[0]);  // param is window title
 	
-	// finally, create a window w/ OpenGL context
-	// window not displayed until glutMainLoop() is called
-	glutDisplayFunc( render );
-	glutIdleFunc( idleCB );
+// 	// finally, create a window w/ OpenGL context
+// 	// window not displayed until glutMainLoop() is called
+// 	glutDisplayFunc( render );
+// 	glutIdleFunc( idleCB );
 	
-	return handle;
-}
+// 	return handle;
+// }
 
 bool initGL() {
 	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -73,11 +72,20 @@ void render() {
 	//glutSwapBuffers();  // show in viewport
 }
 
-void idleCB() {
-	glutPostRedisplay();
-}
+// void idleCB() {
+// 	glutPostRedisplay();
+// }
 
-void exitCB() {
+// void exitCB() {
+// 	clearSharedMem();
+// }
+
+void runMainLoop( int argc, char **argv ) {
+	initSharedMem();
+	initGL();
+	while (true) {
+		render();
+	}
 	clearSharedMem();
 }
 

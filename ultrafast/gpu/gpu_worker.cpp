@@ -1,15 +1,15 @@
 #include "gpu/BUtil.h"
 
-//void runMainLoop( int val );
+
 
 int main( int argc, char **argv ) {
-	initSharedMem();
+	//initSharedMem();
 	
 	// register exit callback
-	atexit( exitCB );  // glut
+	// atexit( exitCB );  // glut
 
 	// init GLUT and GL
-	initGLUT( argc, argv );
+	// initGLUT( argc, argv );
 	initGL();
 	
 	// // get OpenGL info (need glInfo.cpp/h)
@@ -20,8 +20,8 @@ int main( int argc, char **argv ) {
 	// last GLUT call (loop)
 	// window will be shown and display callback is triggered by events
 	// NOTE: this call never returns main()
-	glutMainLoop();  /* Start GLUT event-processing loop */
-	
+	// glutMainLoop();  /* Start GLUT event-processing loop */
+
 	return EXIT_SUCCESS;
 }
 
