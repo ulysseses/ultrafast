@@ -17,20 +17,12 @@ data/
 *.a
 *.la
 *.lo
-!lib/*.lib
-!lib/*.a
-!lib/*.la
-!lib/*.lo
 
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
 *.so.*
 *.dylib
-!lib/*.dll
-!lib/*.so
-!lib/*.so.*
-!lib/*.dylib
 
 
 # Executables

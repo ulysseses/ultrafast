@@ -28,7 +28,7 @@ int main( int argc, char **argv ) {
 		}
 	}
 	printf("\ngpu_worker exit...\n");
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 
