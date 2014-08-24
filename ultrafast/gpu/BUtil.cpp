@@ -9,14 +9,19 @@ BTexture *texObj;
 
 
 bool initSharedMem() {
+	// disable zmq's automatic signal handling
+	zsys_handler_set(NULL);
+	
 	texObj = new BTexture(IMAGE_WIDTH, IMAGE_HEIGHT,
 		SCREEN_WIDTH, SCREEN_HEIGHT, "gpu");
+	printf("texObj created!\n");
 	return true;
 }
 
 void clearSharedMem() {
 	// clean up texture on GPU
 	delete texObj;
+	printf("texObj cleaned!\n");
 }
 
 // //debug
@@ -40,14 +45,16 @@ void clearSharedMem() {
 // }
 
 bool initGL() {
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glEnable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
 	glClearColor(0.f, 0.f, 0.f, 0.f);  // background color
 	
 	// Initialize Projection Matrix
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	glOrtho( 0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, 1.0, -1.0 );
+	glOrtho( 0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, 0.0, 1.0 );
 	
 	// Initialize ModelView Matrix
 	glMatrixMode( GL_MODELVIEW );
@@ -80,14 +87,8 @@ void render() {
 // 	clearSharedMem();
 // }
 
-void runMainLoop( int argc, char **argv ) {
-	initSharedMem();
-	initGL();
-	while (true) {
-		render();
-	}
-	clearSharedMem();
-}
+BContext::BContext()  {  initSharedMem(); }
+BContext::~BContext() { clearSharedMem(); }
 
 
 

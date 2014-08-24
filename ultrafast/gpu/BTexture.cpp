@@ -1,8 +1,6 @@
 #include "gpu/BTexture.h"
-#include "sizes.h"
 #include <math.h>
 #include <stdlib.h>
-//#include <string>
 
 #define PI 3.14159265359
 
@@ -125,7 +123,6 @@ BTexture::BTexture( GLuint iwidth, GLuint iheight,
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 	// Set target framebuffer for pixel reading
 	glReadBuffer(GL_FRONT);
-	
 }
 
 BTexture::~BTexture() {
