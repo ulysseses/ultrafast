@@ -36,6 +36,10 @@ $(BIN)/gpu_worker : $(wildcard $(gpudir)/*)
 $(addprefix $(BIN)/, $(cluster)) : $(BIN)/% : $(clusterdir)/%.c
 	$(CC) $(CFLAGS) $(INC) $< $(LIBZMQ) -o $@
 
+#client (rough)
+bin/client : ultrafast/UF_ZMQ.h ultrafast/sizes.h ultrafast/client/client.c
+	$(CC) $(CFLAGS) $(INC) ultrafast/client/client.c $(LIBZMQ) -o $@
+
 clean:
 	rm -rf $(BUILD)
 	mkdir $(BUILD)
