@@ -5,6 +5,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 //#include <GL/glext.h>  // don't need, already included in Gl/gl.h
-#include <GL/freeglut.h>
+//#include <GL/freeglut.h>
 
 #endif

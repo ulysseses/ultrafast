@@ -5,7 +5,6 @@
 #include "UF_ZMQ.h"
 #include "gpu/OpenGL.h"
 #include "gpu/VertexData2D.h"
-#include "sizes.h"
 #include <string>
 
 class BTexture {

@@ -1,8 +1,7 @@
 #include "gpu/BUtil.h"
-#include <signal.h>  /* struct sigaction, sigfillset, sigaction */
-#include <cstring>   /* memset */
-// debug
-#include <stdio.h>
+#include <signal.h>	/* struct sigaction, sigfillset, sigaction */
+#include <string.h>	/* memset */
+#include <stdio.h>	/* debugging */
 
 
 bool quit = false;  // signal flag
@@ -10,26 +9,6 @@ bool quit = false;  // signal flag
 void got_signal(int) { quit = true; }
 
 int main( int argc, char **argv ) {
-	/*
-	initSharedMem();
-	
-	register exit callback
-	atexit( exitCB );  // glut
-
-	init GLUT and GL
-	initGLUT( argc, argv );
-	initGL();
-	
-	// get OpenGL info (need glInfo.cpp/h)
-	glInfo gli;
-	gli.getInfo();
-	gli.printSelf();
-
-	last GLUT call (loop)
-	window will be shown and display callback is triggered by events
-	NOTE: this call never returns main()
-	glutMainLoop();  /* Start GLUT event-processing loop
-	*/
 	
 	// override SIGINT POSIX behavior
 	// NOTE: doesn't interact well with zctx :(

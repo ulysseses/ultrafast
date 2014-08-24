@@ -1,6 +1,7 @@
 #include "gpu/BTexture.h"
-#include <math.h>
-#include <stdlib.h>
+#include "sizes.h"
+#include <string.h>  /* memset, memcpy */
+#include <assert.h>  /* assert */
 
 #define PI 3.14159265359
 

@@ -9,6 +9,15 @@ static struct jpeg_compress_struct	cinfo;
 static struct jpeg_error_mgr		jerr;
 static struct jpeg_destination_mgr	dmgr;
 
+/*
+inline byte* encoder(byte *unprocessed_data, size_t size) {
+	// identity
+	byte *processed_data = (byte*) malloc(size);
+	memcpy(processed_data, unprocessed_data, size);
+	//free(unprocessed_data);
+	return processed_data;
+}
+*/
 
 byte* encoder (byte *unprocessed_data, size_t *size) {
 	// NOTE: size is not used (we use sizes.h's h, w, & num_channels

@@ -10,7 +10,6 @@ SRC			:= ultrafast
 INC			:= -I$(SRC) -Ilib
 LIBZMQ		:= -lzmq -lczmq
 LIBGL		:= -lGL -lGLU
-#			   -lglut
 LIBJPEG     := -Llib -ljpeg
 
 targets		:= $(addprefix $(BIN)/, proxy forwarder decode_worker encode_worker gpu_worker)
@@ -26,7 +25,7 @@ cluster 	:= forwarder proxy
 all : $(targets)
 
 #codec
-$(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(wildcard $(codecdir)/worker.*)
+$(addprefix $(BIN)/, $(codec)) : $(BIN)/% : $(codecdir)/%.c $(codecdir)/worker.h
 	$(CC) $(CFLAGS) $(INC) $(filter-out %.h, $^) $(LIBZMQ) $(LIBJPEG) -o $@
 
 #gpu

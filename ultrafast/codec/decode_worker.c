@@ -9,6 +9,16 @@ static struct jpeg_decompress_struct	dinfo;
 static struct jpeg_error_mgr			jerr;
 static struct jpeg_source_mgr			smgr;
 
+/*
+inline byte* decoder(byte *unprocessed_data, size_t size) {
+	// identity
+	byte *processed_data = (byte*) malloc(size);
+	memcpy(processed_data, unprocessed_data, size);
+	//free(unprocessed_data);
+	return processed_data;
+}
+*/
+
 byte* decoder (byte *unprocessed_data, size_t *size) {
 	smgr.next_input_byte = (JOCTET*)unprocessed_data;  // input buffer (unsigned char or JOCTET)
 	JSAMPROW row_pointer;  // also unsigned char *

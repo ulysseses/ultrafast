@@ -66,7 +66,7 @@ int main (int argc, char * argv[]) {
 	}
 	zlist_destroy(&workers);
 	zctx_destroy(&ctx);
-	return EXIT_SUCCESS;
+	return 0;
 	
 }  /* main */
 

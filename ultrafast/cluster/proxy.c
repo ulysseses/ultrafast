@@ -47,7 +47,7 @@ int main (int argc, char * argv[]) {
 			msg = zmsg_recv(backend);
 			if (!msg) break;
 			zframe_t *worker_id = zmsg_pop(msg);
-			// distinguish msg from DECODER or ENCODER
+			// distinguish msg from worker
 			if (memcmp(zframe_data(zmsg_last(msg)), WORKER_READY, 1)
 					== 0)
 				zmsg_destroy(&msg);
@@ -67,7 +67,7 @@ int main (int argc, char * argv[]) {
 	}
 	zlist_destroy(&workers);
 	zctx_destroy(&ctx);
-	return EXIT_SUCCESS;
+	return 0;
 }  /* main */
 
 

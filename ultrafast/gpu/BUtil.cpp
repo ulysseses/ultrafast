@@ -1,8 +1,6 @@
 #include "gpu/BUtil.h"
 #include "gpu/BTexture.h"
-#include "sizes.h"
-#include <stdio.h>
-#include <string>
+#include <stdio.h>  /* debugging features */
 
 
 BTexture *texObj;
@@ -24,25 +22,6 @@ void clearSharedMem() {
 	printf("texObj cleaned!\n");
 }
 
-// //debug
-// #include <iostream>
-// int initGLUT( int argc, char **argv ) {
-// 	// GLUT stuff for windowing
-// 	// initialized before any other GLUT routines
-// 	glutInit( &argc, argv );
-// 	std::cout << "hi" << std::endl;
-// 	glutInitDisplayMode( GLUT_LUMINANCE );  // display mode
-// 	glutInitWindowSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-// 	glutInitWindowPosition( 100, 100 );
-// 	int handle = glutCreateWindow(argv[0]);  // param is window title
-	
-// 	// finally, create a window w/ OpenGL context
-// 	// window not displayed until glutMainLoop() is called
-// 	glutDisplayFunc( render );
-// 	glutIdleFunc( idleCB );
-	
-// 	return handle;
-// }
 
 bool initGL() {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -79,17 +58,9 @@ void render() {
 	//glutSwapBuffers();  // show in viewport
 }
 
-// void idleCB() {
-// 	glutPostRedisplay();
-// }
 
-// void exitCB() {
-// 	clearSharedMem();
-// }
 
 BContext::BContext()  {  initSharedMem(); }
 BContext::~BContext() { clearSharedMem(); }
-
-
 
 
