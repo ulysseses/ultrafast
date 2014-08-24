@@ -1,5 +1,6 @@
 #include "gpu/BTexture.h"
 #include "sizes.h"
+#include <string>	 /* c++ string dependence */
 #include <string.h>  /* memset, memcpy */
 #include <assert.h>  /* assert */
 

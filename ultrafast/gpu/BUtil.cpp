@@ -1,5 +1,6 @@
 #include "gpu/BUtil.h"
 #include "gpu/BTexture.h"
+#include <string>	 /* c++ string dependence */
 #include <stdio.h>  /* debugging features */
 
 
