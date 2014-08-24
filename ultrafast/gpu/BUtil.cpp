@@ -13,7 +13,7 @@ bool initSharedMem() {
 	zsys_handler_set(NULL);
 	
 	texObj = new BTexture(IMAGE_WIDTH, IMAGE_HEIGHT,
-		SCREEN_WIDTH, SCREEN_HEIGHT, "gpu");
+		SCREEN_WIDTH, SCREEN_HEIGHT, "proxy-be", "proxy-be");
 	printf("texObj created!\n");
 	return true;
 }

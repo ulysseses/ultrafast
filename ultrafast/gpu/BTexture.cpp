@@ -23,13 +23,14 @@ static const int NUM_ELEMENTS	= (NUM_BEAMS - 1) * 6;
 
 
 BTexture::BTexture( GLuint iwidth, GLuint iheight,
-	GLuint swidth, GLuint sheight, std::string path ) {
+	GLuint swidth, GLuint sheight,
+	std::string fe_path, std::string be_path ) {
 	/* ZMQ */
 	ctx = zctx_new();
 	frontend	= zsocket_new(ctx, ZMQ_REQ);
 	backend		= zsocket_new(ctx, ZMQ_DEALER);
-	zsocket_connect(frontend, "ipc://%s-fe.ipc", path.c_str());
-	zsocket_connect(backend, "ipc://%s-be.ipc", path.c_str());
+	zsocket_connect(frontend, "ipc://%s.ipc", fe_path.c_str());
+	zsocket_connect(backend, "ipc://%s.ipc", be_path.c_str());
 	
 	zframe_t *frame = zframe_new(WORKER_READY, 1);
 	zframe_send(&frame, frontend, 0);

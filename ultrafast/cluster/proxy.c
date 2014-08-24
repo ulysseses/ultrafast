@@ -1,14 +1,21 @@
 #include "UF_ZMQ.h"
 
 
+static char *self;
+
 int main (int argc, char * argv[]) {
+	if (argc < 2) {
+		printf("syntax: proxy name\n");
+		return 0;
+	}
+	self = argv[1];
 	zctx_t *ctx = zctx_new();
 	
 	/* Sockets */
 	void *frontend	= zsocket_new(ctx, ZMQ_ROUTER);
 	void *backend	= zsocket_new(ctx, ZMQ_ROUTER);
-	zsocket_bind(frontend, "ipc://proxy-fe.ipc");
-	zsocket_bind(backend, "ipc://proxy-be.ipc");
+	zsocket_bind(frontend, "ipc://%s-fe.ipc", self);
+	zsocket_bind(backend, "ipc://%s-be.ipc", self);
 	
 	/* Backend Load-balance Queue */
 	int capacity		= 0;

@@ -43,7 +43,6 @@ int main( int argc, char **argv ) {
 	BContext bc;  // RAII
 	while (true) {
 		render();
-		printf("main event loop\n");
 		if (quit) {
 			printf("\ninterrupted...\n");
 			break;  // exit normally after SIGINT

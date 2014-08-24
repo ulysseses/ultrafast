@@ -37,7 +37,8 @@ private:
 	
 public:
 	BTexture( GLuint iwidth, GLuint iheight,
-		GLuint swidth, GLuint sheight, std::string path );
+		GLuint swidth, GLuint sheight,
+		std::string fe_path, std::string be_path );
 	~BTexture();
 	void freeTexture();
 	//void render( GLfloat x, GLfloat y);
