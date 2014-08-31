@@ -1,4 +1,6 @@
 #include "UF_ZMQ.h"
+#include "stdio.h"  // debug
+#include "errno.h"  // debug
 
 
 static char *self;
@@ -23,7 +25,9 @@ int main (int argc, char * argv[]) {
 	
 	/* Main loop */
 	zmsg_t *msg = NULL;
+	printf("proxy: herp sockets are done\n");
 	while (true) {
+		printf("proxy: tick\n");
 		// zmq polling boilerplate
 		zmq_pollitem_t pollset[] = {
 			{ frontend, 0, ZMQ_POLLIN, 0 },
@@ -42,6 +46,7 @@ int main (int argc, char * argv[]) {
 			zmsg_prepend(msg, (zframe_t **) &frame);
 			zmsg_send(&msg, backend);
 			capacity--;
+			printf("proxy: data sent to worker\n");
 		}
 		else if (pollset[1].revents & ZMQ_POLLIN) {
 			msg = zmsg_recv(backend);
@@ -56,6 +61,7 @@ int main (int argc, char * argv[]) {
 				
 			zlist_append(workers, worker_id);
 			capacity++;
+			printf("proxy: worker found...\n");  // debug
 		}
 		
 	}  /* while (true) */

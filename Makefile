@@ -12,7 +12,7 @@ LIBZMQ		:= -lzmq -lczmq
 LIBGL		:= -lGL -lGLU
 LIBJPEG     := -Llib -ljpeg
 
-targets		:= $(addprefix $(BIN)/, proxy forwarder decode_worker encode_worker gpu_worker)
+targets		:= $(addprefix $(BIN)/, proxy forwarder decode_worker encode_worker gpu_worker client)
 codecdir	:= $(SRC)/codec
 gpudir		:= $(SRC)/gpu
 clusterdir	:= $(SRC)/cluster

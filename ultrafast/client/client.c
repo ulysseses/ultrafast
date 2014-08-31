@@ -5,6 +5,7 @@
 #include "sizes.h"
 // debugging
 #include <errno.h>
+#include <assert.h>
 
 
 #define RAWSIZE (IMAGE_WIDTH * IMAGE_HEIGHT * NUM_CHANNEL)
@@ -13,7 +14,7 @@
 static byte rawdata[RAWSIZE];
 static byte imgdata[IMGSIZE];
 
-static char *server;
+static char *servername;
 
 int main (int argc, char **argv) {
 	if (argc < 3) {
@@ -35,17 +36,29 @@ int main (int argc, char **argv) {
 	}
 	// whole file is now loaded in mem buf
 	fclose(fp);
+	printf("client: yay, file loaded in mem buf\n");
+	assert(rawdata[0] == 120);
+	assert(rawdata[1] == 123);
 
 	zctx_t *ctx = zctx_new();
 	// socket
 	void *server = zsocket_new(ctx, ZMQ_DEALER);
-	zsocket_connect(server, "ipc://%s.ipc", server);
+	zsocket_connect(server, "ipc://%s.ipc", servername);
 
-	zframe_t *frame = NULL;
+	zframe_t *frame = zframe_new(rawdata, RAWSIZE*sizeof(byte));
+	int blah = zframe_send(&frame, server, 0);
+	if (blah == -1) {
+		printf("client: sending to server error: %s\n", zmq_strerror(errno));
+
+	}
+	else {
+		printf("client: successfully sent to server\n");
+	}
 	while (true) {
-		zmq_pollset_t pollset[] = {
+		zmq_pollitem_t pollset[] = {
 			{ server, 0, ZMQ_POLLIN, 0 }
 		};
+		printf("client: im working..\n");
 		int rc = zmq_poll(pollset, 1, -1);  // indefinite wait
 		if (rc == -1) break;
 		if (pollset[0].revents & ZMQ_POLLIN) {

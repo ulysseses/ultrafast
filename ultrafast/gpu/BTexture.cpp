@@ -3,6 +3,7 @@
 #include <string>	 /* c++ string dependence */
 #include <string.h>  /* memset, memcpy */
 #include <assert.h>  /* assert */
+#include <errno.h>   /* debugging */
 
 #define PI 3.14159265359
 
@@ -89,6 +90,7 @@ BTexture::BTexture( GLuint iwidth, GLuint iheight,
 	
 	// Texture & Texture Buffer Object
 	glGenBuffers(1, &tboID);
+	printf("tboID is buffer? %d\n", glIsBuffer(tboID));
 	glBindBuffer(GL_TEXTURE_BUFFER, tboID);
 	GLubyte zeros[textureSize];
 	memset(zeros, 0, textureSize * sizeof(GLubyte));
@@ -185,8 +187,11 @@ void BTexture::render() {
 void BTexture::queuePop() {
 	msg = zmsg_recv(frontend);
 	if (!msg) {
+		printf("queuPop error:%s\n", zmq_strerror(errno));
+		printf("exitiing...\n");
 		exit(EXIT_FAILURE);
 	}
+	printf("queuePop: received data!\n");
 	frame = zmsg_last(msg);
 	GLubyte *p_tData = (GLubyte*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_WRITE);
 	assert (memcpy((void*)p_tData, (void*)zframe_data(frame),
